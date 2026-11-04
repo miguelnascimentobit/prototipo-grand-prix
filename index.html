@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Energisa RH</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+</head>
+
+<body>
+
+    <header class="topo">
+
+        <div class="logo">
+            <span class="logo-icon">⚡</span>
+            <span>energisa</span>
+            <strong>RH</strong>
+        </div>
+
+        <div class="usuario">
+            <span>Olá, Fulano!</span>
+            <i class="fa-solid fa-bell"></i>
+        </div>
+
+    </header>
+
+
+    <main class="container">
+
+        <section class="boas-vindas">
+            <h1>Olá, Fulano! 👋</h1>
+            <p>Bem-vinda ao seu espaço de RH Energisa.</p>
+
+            <div class="data">
+                <i class="fa-regular fa-calendar"></i>
+                <span id="dataAtual"></span>
+            </div>
+        </section>
+
+
+        <!-- BOTÕES PRINCIPAIS -->
+
+        <section class="acoes">
+
+            <!-- PONTO -->
+
+            <button
+                class="card-ponto"
+                onclick="registrarPonto()"
+            >
+
+                <div class="icone-ponto">
+                    <i class="fa-solid fa-fingerprint"></i>
+                </div>
+
+                <div class="conteudo-card">
+
+                    <h2>Ponto</h2>
+
+                    <p>
+                        Registre seu ponto de forma rápida e segura.
+                    </p>
+
+                    <div class="horario">
+                        <i class="fa-regular fa-clock"></i>
+
+                        <span id="horaAtual">
+                            00:00:00
+                        </span>
+                    </div>
+
+                    <span class="botao-card">
+                        Registrar ponto
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+
+                </div>
+
+            </button>
+
+
+            <!-- ENERGISA QUE CUIDA -->
+
+            <a
+                class="card-cuida"
+                href="file:///C:/Users/ms761/Downloads/portal_de_prontid_o_e_bem_estar%20(1).html"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+
+                <div class="coracao">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <div class="conteudo-card">
+
+                    <span class="tag">
+                        BEM-ESTAR
+                    </span>
+
+                    <h2>
+                        Energisa que cuida
+                    </h2>
+
+                    <p>
+                        Saúde, bem-estar e qualidade de vida
+                        para você e sua família.
+                    </p>
+
+                    <span class="botao-cuida">
+                        Acessar agora
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </span>
+
+                </div>
+
+            </a>
+
+        </section>
+
+
+        <!-- SERVIÇOS -->
+
+        <section class="titulo-secao">
+
+            <h2>
+                Serviços do RH
+            </h2>
+
+            <p>
+                Acesse rapidamente os principais recursos.
+            </p>
+
+        </section>
+
+
+        <section class="servicos">
+
+            <div class="servico">
+
+                <i class="fa-solid fa-user"></i>
+
+                <h3>
+                    Meus dados
+                </h3>
+
+                <p>
+                    Atualize seus dados cadastrais.
+                </p>
+
+            </div>
+
+
+            <div class="servico">
+
+                <i class="fa-solid fa-file-lines"></i>
+
+                <h3>
+                    Solicitações
+                </h3>
+
+                <p>
+                    Férias, documentos e declarações.
+                </p>
+
+            </div>
+
+
+            <div class="servico">
+
+                <i class="fa-solid fa-graduation-cap"></i>
+
+                <h3>
+                    Desenvolvimento
+                </h3>
+
+                <p>
+                    Cursos e oportunidades.
+                </p>
+
+            </div>
+
+
+            <div class="servico">
+
+                <i class="fa-solid fa-gift"></i>
+
+                <h3>
+                    Benefícios
+                </h3>
+
+                <p>
+                    Confira seus benefícios.
+                </p>
+
+            </div>
+
+
+            <div class="servico">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <h3>
+                    Minha carreira
+                </h3>
+
+                <p>
+                    Acompanhe seu desenvolvimento.
+                </p>
+
+            </div>
+
+
+            <div class="servico">
+
+                <i class="fa-solid fa-headset"></i>
+
+                <h3>
+                    Fale com o RH
+                </h3>
+
+                <p>
+                    Tire suas dúvidas.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- BANNER -->
+
+        <section class="banner">
+
+            <div>
+
+                <span>
+                    JUNTOS POR UM FUTURO MELHOR
+                </span>
+
+                <h2>
+                    Pessoas, energia
+                    <br>
+                    e um mesmo propósito.
+                </h2>
+
+            </div>
+
+            <div class="raio">
+                ⚡
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- MENU INFERIOR -->
+
+    <nav class="menu">
+
+        <a
+            href="#"
+            class="ativo"
+        >
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>
+                Início
+            </span>
+
+        </a>
+
+
+        <a
+            href="#"
+            onclick="registrarPonto(); return false;"
+        >
+
+            <i class="fa-solid fa-fingerprint"></i>
+
+            <span>
+                Ponto
+            </span>
+
+        </a>
+
+
+        <a href="#">
+
+            <i class="fa-solid fa-gift"></i>
+
+            <span>
+                Benefícios
+            </span>
+
+        </a>
+
+
+        <a href="#">
+
+            <i class="fa-solid fa-bell"></i>
+
+            <span>
+                Notificações
+            </span>
+
+        </a>
+
+
+        <a href="#">
+
+            <i class="fa-solid fa-bars"></i>
+
+            <span>
+                Mais
+            </span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- NOTIFICAÇÃO -->
+
+    <div
+        id="notificacao"
+        class="notificacao"
+    >
+
+        <i class="fa-solid fa-circle-check"></i>
+
+        <div>
+
+            <strong>
+                Ponto registrado!
+            </strong>
+
+            <p id="mensagemPonto"></p>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
