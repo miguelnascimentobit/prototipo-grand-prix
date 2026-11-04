@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grupo Energisa | Portal de Prontidão e Bem-Estar</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --energisa-blue: #00a4d3;      
+      --energisa-blue-dark: #007a9e; 
+      --energisa-orange: #f37021;    
+      --energisa-orange-hover: #d95d13;
+      --bg-color: #f4f7f9;
+      --card-bg: #ffffff;
+      --text-main: #2c3e50;
+      --text-muted: #64748b;
+      
+      --footer-bg: #0b192c;          
+      --footer-text: #94a3b8;
+
+      --battery-red: #ef4444;
+      --battery-yellow: #f59e0b;
+      --battery-green: #10b981;
+
+      --border-radius: 12px;
+      --shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--energisa-blue);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .brand-logo-container {
+      background: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .brand-logo {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-tag {
+      font-size: 0.85rem;
+      background-color: var(--energisa-orange);
+      color: white;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 0.5rem;
+    }
+
+    nav button {
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 0.6rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      opacity: 0.9;
+    }
+
+    nav button:hover, nav button.active {
+      opacity: 1;
+      background-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background-color: rgba(0, 0, 0, 0.15);
+      padding: 0.4rem 0.85rem;
+      border-radius: 20px;
+    }
+
+    .user-info {
+      font-size: 0.85rem;
+      text-align: right;
+    }
+
+    .user-points {
+      background-color: var(--energisa-orange);
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 12px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    .view-panel {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .view-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      color: var(--energisa-blue-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .shift-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.75rem;
+    }
+
+    .tab-shift-btn {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+
+    .tab-shift-btn.active {
+      color: white;
+      background-color: var(--energisa-blue);
+    }
+
+    .privacy-banner {
+      background: #e0f2fe;
+      border-left: 4px solid var(--energisa-blue);
+      padding: 1.25rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: #0369a1;
+      line-height: 1.6;
+    }
+
+    .privacy-banner strong {
+      color: #0c4a6e;
+    }
+
+    /* Battery Single Graphic */
+    .battery-wrapper-single {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      margin: 1rem 0;
+    }
+
+    .battery-shell {
+      width: 100px;
+      height: 190px;
+      border: 5px solid #334155;
+      border-radius: 16px;
+      position: relative;
+      padding: 5px;
+      background-color: #f8fafc;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .battery-shell::before {
+      content: '';
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 10px;
+      background-color: #334155;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .battery-fill {
+      width: 100%;
+      height: 0%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border-radius: 8px;
+      transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease;
+      background-color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 0.9rem;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      text-align: center;
+      padding: 0 4px;
+    }
+
+    .battery-options-row {
+      display: flex;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .btn-battery-option {
+      flex: 1;
+      padding: 0.85rem 0.5rem;
+      border: 2px solid #e2e8f0;
+      background: white;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      text-align: center;
+    }
+
+    .btn-battery-option:hover {
+      border-color: var(--energisa-blue);
+      transform: translateY(-2px);
+    }
+
+    .btn-battery-option.selected[data-level="low"] {
+      border-color: var(--battery-red);
+      background-color: #fef2f2;
+      color: #991b1b;
+    }
+
+    .btn-battery-option.selected[data-level="mid"] {
+      border-color: var(--battery-yellow);
+      background-color: #fffbeb;
+      color: #92400e;
+    }
+
+    .btn-battery-option.selected[data-level="high"] {
+      border-color: var(--battery-green);
+      background-color: #ecfdf5;
+      color: #065f46;
+    }
+
+    /* Battery Model Buttons for Diagnostic Factors */
+    .factors-battery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .btn-factor-battery {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+      user-select: none;
+    }
+
+    .btn-factor-battery:hover {
+      border-color: var(--energisa-blue);
+      background-color: #f8fafc;
+      transform: translateY(-2px);
+    }
+
+    .btn-factor-battery.selected {
+      border-color: var(--energisa-orange);
+      background-color: #fff7ed;
+      box-shadow: 0 4px 10px rgba(243, 112, 33, 0.15);
+    }
+
+    .factor-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+      padding-right: 0.5rem;
+    }
+
+    /* Mini Battery Model Indicator inside factor button */
+    .mini-battery-indicator {
+      width: 22px;
+      height: 38px;
+      border: 2px solid #475569;
+      border-radius: 4px;
+      position: relative;
+      padding: 2px;
+      background: #f1f5f9;
+      flex-shrink: 0;
+    }
+
+    .mini-battery-indicator::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 3px;
+      background-color: #475569;
+      border-radius: 2px 2px 0 0;
+    }
+
+    .mini-battery-fill {
+      width: 100%;
+      height: 20%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background-color: #cbd5e1;
+      border-radius: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-factor-battery.selected .mini-battery-indicator {
+      border-color: var(--energisa-orange);
+    }
+
+    .btn-factor-battery.selected .mini-battery-indicator::before {
+      background-color: var(--energisa-orange);
+    }
+
+    .btn-factor-battery.selected .mini-battery-fill {
+      height: 100%;
+      background-color: var(--energisa-orange);
+    }
+
+    .time-lock-banner {
+      background-color: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #b45309;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .post-submission {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    .success-badge {
+      width: 70px;
+      height: 70px;
+      background-color: #d1fae5;
+      color: var(--battery-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin: 0 auto 1rem auto;
+      font-weight: bold;
+    }
+
+    .support-box {
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      max-width: 600px;
+      margin: 1.5rem auto;
+      text-align: left;
+    }
+
+    .support-box h3 {
+      color: #166534;
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .support-box p {
+      font-size: 0.9rem;
+      color: #15803d;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .btn-pratica {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: var(--energisa-blue);
+      color: white;
+      text-decoration: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .btn-pratica:hover {
+      background-color: var(--energisa-blue-dark);
+    }
+
+    .rewards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .reward-item {
+      border: 1px solid #e2e8f0;
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+    }
+
+    .reward-item:hover {
+      box-shadow: var(--shadow);
+    }
+
+    .reward-cost {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--energisa-orange);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .reward-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .reward-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .btn-claim {
+      background-color: #f1f5f9;
+      color: var(--text-main);
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-claim:hover {
+      background-color: var(--energisa-orange);
+      color: white;
+      border-color: var(--energisa-orange);
+    }
+
+    footer {
+      background-color: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 2.5rem 1.5rem;
+      margin-top: auto;
+      border-top: 4px solid var(--energisa-orange);
+    }
+
+    .footer-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .footer-logo-box {
+      background: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    .footer-logo-img {
+      height: 28px;
+      width: auto;
+    }
+
+    .footer-text-info {
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .footer-text-info strong {
+      color: white;
+    }
+
+    @media (max-width: 640px) {
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav ul {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+      }
+
+      .battery-options-row {
+        flex-direction: column;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Modal para autenticação por PIN -->
+  <div id="pin-modal-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(11, 25, 44, 0.92); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
+    <div style="background: white; border-radius: 16px; padding: 2.5rem; width: 90%; max-width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;">
+      <div style="background: #f8fafc; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 1rem;">
+        <img src="https://rondoniaovivo.com/imagensNoticias/energisa-logotipo_xDSmviM.png" alt="Energisa" style="height: 38px;" onerror="this.onerror=null; this.src='https://www.energisa.com.br/PublishingImages/Header/logo-energisa.png';">
+      </div>
+      <h2 style="color: var(--energisa-blue-dark); font-size: 1.3rem; margin-bottom: 0.5rem;">Portal de Prontidão e Bem-Estar</h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem;">Digite seu PIN de acesso para continuar:</p>
+      
+      <div style="margin-bottom: 1.25rem;">
+        <input type="password" id="pin-input" maxlength="4" placeholder="••••" style="width: 100%; text-align: center; font-size: 2rem; letter-spacing: 0.6rem; padding: 0.6rem; border: 2px solid #cbd5e1; border-radius: 10px; outline: none; transition: border-color 0.3s;" onkeyup="if(event.key==='Enter') validatePin()">
+        <div id="pin-error-msg" style="color: var(--battery-red); font-size: 0.82rem; margin-top: 0.5rem; display: none; font-weight: 600;">PIN incorreto. Tente novamente.</div>
+      </div>
+
+      <button onclick="validatePin()" style="width: 100%; background: var(--energisa-orange); color: white; border: none; padding: 0.9rem; font-size: 1rem; font-weight: 700; border-radius: 8px; cursor: pointer; transition: background 0.3s;">
+        Acessar Portal
+      </button>
+
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #f1f5f9; font-size: 0.78rem; color: #64748b; line-height: 1.4;">
+        Digite a senha que a empresa informou
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-content">
+      <div class="brand">
+        <div class="brand-logo-container">
+          <img src="https://rondoniaovivo.com/imagensNoticias/energisa-logotipo_xDSmviM.png" 
+               alt="Grupo Energisa" 
+               class="brand-logo"
+               onerror="this.onerror=null; this.src='https://www.energisa.com.br/PublishingImages/Header/logo-energisa.png';">
+        </div>
+        <span class="brand-tag">energisa que cuida</span>
+      </div>
+      
+      <nav id="main-nav" style="display: block;">
+        <ul>
+          <li id="nav-item-checkin"><button class="active" onclick="switchView('view-checkin')">Meu dia</button></li>
+          <li id="nav-item-rewards"><button onclick="switchView('view-rewards')">Recompensas</button></li>
+          <li id="nav-item-admin" style="display: none;"><button onclick="switchView('view-admin')">Painel Gestor (ADM)</button></li>
+        </ul>
+      </nav>
+
+      <div class="user-badge" id="user-badge">
+        <div class="user-info">
+          <div id="user-name-display" style="font-weight: 600;">Modo Operacional</div>
+          <div id="user-role-subtitle" style="font-size: 0.7rem; opacity: 0.85;">Check-in Direto de Campo</div>
+        </div>
+        <div class="user-points" id="user-points-badge">
+          <span id="user-points-count">XXX</span> pts
+        </div>
+        <button onclick="resetPinAccess()" title="Sair / Alterar PIN" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.75rem; margin-left: 0.5rem;">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-checkin" class="view-panel active">
+      
+      <div class="shift-tabs">
+        <button class="tab-shift-btn active" id="tab-start" onclick="switchShiftTab('start')">Início de Turno</button>
+        <button class="tab-shift-btn" id="tab-end" onclick="switchShiftTab('end')">Fim de Turno</button>
+      </div>
+
+      <!-- Privacy & LGPD Guarantee Banner -->
+      <div class="privacy-banner">
+        <strong>Sua Privacidade e o Anonimato Garantidos</strong><br>
+        O seu check-in diário garante pontos de recompensa acumulativos. Conforme a <strong>LGPD</strong>, suas respostas são <strong>100% anônimas e desvinculadas de sua identidade</strong>. Apenas dados consolidados são utilizados para apoio à saúde física e mental.
+      </div>
+
+      <!-- SHIFT START -->
+      <div id="shift-start-section">
+        
+        <div id="start-time-lock-alert" class="time-lock-banner" style="display: none;">
+          <h3>Início de Turno Indisponível</h3>
+          <p style="font-size: 0.9rem; margin-top: 0.4rem;">Este formulário é recomendado para a abertura do turno. (Horário atual simulado: <span id="current-start-sim-time"></span>).</p>
+          <button onclick="toggleStartShiftOverride()" style="margin-top: 1rem; background: var(--energisa-orange); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 600;">Acessar Formulário</button>
+        </div>
+
+        <div id="checkin-form-wrapper">
+          <div class="card">
+            <h2 class="card-title">1. Como você se sente para começar o trabalho em campo hoje?</h2>
+            <div class="battery-wrapper-single">
+              <div class="battery-shell">
+                <div id="battery-fill-q1" class="battery-fill"></div>
+              </div>
+              <div class="battery-options-row">
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q1', 'low', 'Cansado', this)" data-level="low">
+                  Cansado
+                </button>
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q1', 'mid', 'Normal', this)" data-level="mid">
+                  Normal
+                </button>
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q1', 'high', 'Disposto', this)" data-level="high">
+                  Disposto
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">2. Como você espera que seja o seu dia de trabalho hoje?</h2>
+            <div class="battery-wrapper-single">
+              <div class="battery-shell">
+                <div id="battery-fill-q2" class="battery-fill"></div>
+              </div>
+              <div class="battery-options-row">
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q2', 'high', 'Tranquilo', this)" data-level="high">
+                  Tranquilo
+                </button>
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q2', 'mid', 'Padrão', this)" data-level="mid">
+                  Padrão
+                </button>
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q2', 'low', 'Estressante', this)" data-level="low">
+                  Estressante
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- DIAGNOSTIC QUESTION: SHIFT START FACTORS WITH BATTERY MODEL BUTTONS -->
+          <div class="card">
+            <h2 class="card-title">3. O que está influenciando seu estado ou nível de disposição neste início de dia?</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Selecione os modelos de bateria correspondentes aos fatores que afetam sua energia hoje:</p>
+            
+            <div class="factors-battery-grid">
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'start', 'familiares')">
+                <span class="factor-text">Problemas Familiares / Pessoais</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'start', 'empresa')">
+                <span class="factor-text">Questões da Empresa / Metas</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'start', 'sono')">
+                <span class="factor-text">Má Qualidade do Sono / Insônia</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'start', 'saude')">
+                <span class="factor-text">Saúde Física / Dores / Mal-estar</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'start', 'financeiro')">
+                <span class="factor-text">Preocupações Financeiras</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'start', 'equipe')">
+                <span class="factor-text">Clima na Equipe / Liderança</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'start', 'ansiedade')">
+                <span class="factor-text">Ansiedade / Estresse Emocional</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-submit" onclick="submitCheckin('start')" style="width: 100%; border: none; border-radius: 8px; padding: 1.1rem; font-size: 1.1rem; background-color: var(--energisa-orange); color: white; font-weight: 700; cursor: pointer; transition: var(--transition);">
+            Registrar Início de Turno & Receber Pontos
+          </button>
+        </div>
+
+        <div id="checkin-success-wrapper" style="display: none;">
+          <div class="post-submission">
+            <div class="success-badge">✓</div>
+            <h2 style="color: var(--energisa-blue-dark); margin-bottom: 0.5rem;">Check-in Concluído com Sucesso!</h2>
+            <p style="font-weight: 600; color: var(--energisa-orange); margin-bottom: 1.5rem;">Seus pontos de participação foram creditados!</p>
+            
+            <!-- Dynamic Auto-Evaluation Box -->
+            <div class="support-box" id="auto-eval-start-box">
+              <h3>Guia para Autoavaliação de Saúde Física e Mental</h3>
+              <div id="auto-eval-start-text" style="font-size: 0.9rem; color: #15803d; margin-bottom: 1rem; line-height: 1.6;"></div>
+              
+              <div style="border-top: 1px solid #bbf7d0; padding-top: 0.75rem; margin-top: 0.75rem;">
+                <p style="font-weight: 600; margin-bottom: 0.4rem; color: #166534;">Programa PRÁTICA — Suporte Energisa</p>
+                <p style="margin-bottom: 1rem;">Não hesite em buscar apoio psicológico ou auxílio do SESMT. Sua saúde e segurança vêm em primeiro lugar.</p>
+                <a href="https://www.energisa.com.br" target="_blank" class="btn-pratica">Acessar Plataforma de Apoio</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHIFT END -->
+      <div id="shift-end-section" style="display: none;">
+        
+        <div id="time-lock-alert" class="time-lock-banner" style="display: none;">
+          <h3>Fechamento de Turno</h3>
+          <p style="font-size: 0.9rem; margin-top: 0.4rem;">Faça seu balanço do fim de dia. (Horário atual simulado: <span id="current-sim-time"></span>).</p>
+          <button onclick="toggleTimeOverride()" style="margin-top: 1rem; background: var(--energisa-orange); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 600;">Acessar Formulário</button>
+        </div>
+
+        <div id="shift-end-form-content">
+          <div class="card">
+            <h2 class="card-title">1. Como você avalia seu nível de energia ao final do turno de hoje?</h2>
+            <div class="battery-wrapper-single">
+              <div class="battery-shell">
+                <div id="battery-fill-q3" class="battery-fill"></div>
+              </div>
+              <div class="battery-options-row">
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q3', 'low', 'Exausto', this)" data-level="low">
+                  Exausto
+                </button>
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q3', 'mid', 'Normal', this)" data-level="mid">
+                  Normal
+                </button>
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q3', 'high', 'Disposto', this)" data-level="high">
+                  Disposto
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">2. Como foi o nível de exigência e estresse das atividades de hoje?</h2>
+            <div class="battery-wrapper-single">
+              <div class="battery-shell">
+                <div id="battery-fill-q4" class="battery-fill"></div>
+              </div>
+              <div class="battery-options-row">
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q4', 'high', 'Tranquilo', this)" data-level="high">
+                  Tranquilo
+                </button>
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q4', 'mid', 'Padrão', this)" data-level="mid">
+                  Padrão
+                </button>
+                <button type="button" class="btn-battery-option" onclick="handleSingleBatterySelect('q4', 'low', 'Estressante', this)" data-level="low">
+                  Estressante
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- DIAGNOSTIC QUESTION: SHIFT END FACTORS WITH BATTERY MODEL BUTTONS -->
+          <div class="card">
+            <h2 class="card-title">3. O que mais pesou no seu dia ou prejudicou seu bem-estar ao longo do turno?</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Selecione os modelos de bateria para indicar os fatores que drenaram sua energia hoje:</p>
+            
+            <div class="factors-battery-grid">
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'end', 'pressao_trabalho')">
+                <span class="factor-text">Pressão de Prazos / Sobrecarga</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'end', 'equipamentos')">
+                <span class="factor-text">Condições de Ferramentas / Veículo</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'end', 'comunicacao')">
+                <span class="factor-text">Comunicação / Falha de Apoio</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'end', 'familiares')">
+                <span class="factor-text">Problemas Pessoais / Familiares</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'end', 'desgaste_fisico')">
+                <span class="factor-text">Exaustão Física / Calor Exagerado</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+
+              <div class="btn-factor-battery" onclick="toggleFactorBattery(this, 'end', 'estresse_operacional')">
+                <span class="factor-text">Estresse Operacional / Imprevistos</span>
+                <div class="mini-battery-indicator"><div class="mini-battery-fill"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-submit" onclick="submitCheckin('end')" style="width: 100%; border: none; border-radius: 8px; padding: 1.1rem; font-size: 1.1rem; background-color: var(--energisa-orange); color: white; font-weight: 700; cursor: pointer; transition: var(--transition);">
+            Enviar Fechamento de Turno & Receber Pontos
+          </button>
+        </div>
+
+        <div id="end-success-wrapper" style="display: none;">
+          <div class="post-submission">
+            <div class="success-badge">✓</div>
+            <h2 style="color: var(--energisa-blue-dark); margin-bottom: 0.5rem;">Turno Encerrado com Sucesso!</h2>
+            <p style="font-weight: 600; color: var(--energisa-orange); margin-bottom: 1.5rem;">Sua participação foi registrada!</p>
+            
+            <!-- Dynamic Auto-Evaluation Box -->
+            <div class="support-box" id="auto-eval-end-box">
+              <h3>Guia para Autoavaliação de Saúde Física e Mental</h3>
+              <div id="auto-eval-end-text" style="font-size: 0.9rem; color: #15803d; margin-bottom: 1rem; line-height: 1.6;"></div>
+
+              <div style="border-top: 1px solid #bbf7d0; padding-top: 0.75rem; margin-top: 0.75rem;">
+                <p style="font-weight: 600; margin-bottom: 0.4rem; color: #166534;">Programa PRÁTICA — Suporte Energisa</p>
+                <p style="margin-bottom: 1rem;">Lembre-se de desligar das obrigações ao sair de campo. Seu descanso é essencial para sua qualidade de vida.</p>
+                <a href="https://www.energisa.com.br" target="_blank" class="btn-pratica">Acessar Plataforma de Apoio</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- REWARDS SECTION -->
+    <section id="view-rewards" class="view-panel">
+      <div class="card">
+        <h2 style="color: var(--energisa-blue-dark); margin-bottom: 0.5rem;">Recompensas</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+          Troque os pontos acumulados em seus check-ins por recompensas exclusivas.
+        </p>
+
+        <div class="rewards-grid">
+          <div class="reward-item">
+            <div>
+              <div class="reward-cost">XXX Pontos</div>
+              <div class="reward-title">Garrafa Térmica Reforçada</div>
+              <div class="reward-desc">Garrafa térmica em inox com isolamento duplo e gravação Energisa.</div>
+            </div>
+            <button class="btn-claim" onclick="claimReward('XXX', 'Garrafa Térmica')">Resgatar Recompensa</button>
+          </div>
+
+          <div class="reward-item">
+            <div>
+              <div class="reward-cost">XXX Pontos</div>
+              <div class="reward-title">Bilhete de Sorteio Mensal</div>
+              <div class="reward-desc">1 bilhete para concorrer a vales-compras corporativos.</div>
+            </div>
+            <button class="btn-claim" onclick="claimReward('XXX', 'Bilhete de Sorteio')">Resgatar Recompensa</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN PANEL SECTION -->
+    <section id="view-admin" class="view-panel">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <h2 style="color: var(--energisa-blue-dark); margin-bottom: 0.2rem;">Painel Consolidado de Prontidão (ADM)</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Métricas operacionais agregadas para suporte à saúde ocupacional.</p>
+          </div>
+          <!-- Time Period Selector -->
+          <div style="display: flex; background: #e2e8f0; padding: 4px; border-radius: 8px; gap: 4px;">
+            <button class="tab-shift-btn active" id="filter-daily" onclick="changeAdminFilter('daily')" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">Diário</button>
+            <button class="tab-shift-btn" id="filter-weekly" onclick="changeAdminFilter('weekly')" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">Semanal</button>
+            <button class="tab-shift-btn" id="filter-monthly" onclick="changeAdminFilter('monthly')" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">Mensal</button>
+          </div>
+        </div>
+
+        <!-- Privacy & Anonymity Banner for ADM -->
+        <div class="privacy-banner" style="background: #f0fdf4; border-left-color: var(--battery-green); color: #166534; margin-bottom: 1.5rem;">
+          <strong>Relatório 100% Anônimo e Desvinculado (LGPD)</strong><br>
+          Os dados abaixo representam exclusivamente dados quantitativos estatísticos. Nenhuma resposta individual ou identificador de funcionário é armazenado ou acessível nesta visão administrativa.
+        </div>
+
+        <!-- Metric KPI Summary Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.2rem; text-align: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Total de Respostas</span>
+            <div id="kpi-total-responses" style="font-size: 1.8rem; font-weight: 800; color: var(--energisa-blue-dark); margin-top: 0.2rem;">142</div>
+          </div>
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.2rem; text-align: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Índice Médio de Disposição</span>
+            <div id="kpi-avg-disposition" style="font-size: 1.8rem; font-weight: 800; color: var(--battery-green); margin-top: 0.2rem;">76%</div>
+          </div>
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.2rem; text-align: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Alerta de Cansaço / Estresse</span>
+            <div id="kpi-alert-rate" style="font-size: 1.8rem; font-weight: 800; color: var(--battery-red); margin-top: 0.2rem;">14%</div>
+          </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem;">
+          
+          <!-- Chart 1: Start Energy -->
+          <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.2rem; background: #fafafa;">
+            <h3 style="font-size: 0.95rem; color: var(--energisa-blue-dark); margin-bottom: 1rem; text-align: center;">1. Início de Turno — Disposição / Energia</h3>
+            <div style="height: 240px; position: relative;">
+              <canvas id="chartStartEnergy"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Start Expectation -->
+          <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.2rem; background: #fafafa;">
+            <h3 style="font-size: 0.95rem; color: var(--energisa-blue-dark); margin-bottom: 1rem; text-align: center;">2. Início de Turno — Expectativa do Dia</h3>
+            <div style="height: 240px; position: relative;">
+              <canvas id="chartStartExpectation"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 3: Start Factors -->
+          <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.2rem; background: #fafafa; grid-column: 1 / -1;">
+            <h3 style="font-size: 0.95rem; color: var(--energisa-blue-dark); margin-bottom: 1rem; text-align: center;">3. Início de Turno — Fatores Influenciadores Identificados</h3>
+            <div style="height: 260px; position: relative;">
+              <canvas id="chartStartFactors"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 4: End Energy -->
+          <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.2rem; background: #fafafa;">
+            <h3 style="font-size: 0.95rem; color: var(--energisa-blue-dark); margin-bottom: 1rem; text-align: center;">4. Fim de Turno — Nível de Energia Final</h3>
+            <div style="height: 240px; position: relative;">
+              <canvas id="chartEndEnergy"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 5: End Stress -->
+          <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.2rem; background: #fafafa;">
+            <h3 style="font-size: 0.95rem; color: var(--energisa-blue-dark); margin-bottom: 1rem; text-align: center;">5. Fim de Turno — Nível de Exigência / Estresse</h3>
+            <div style="height: 240px; position: relative;">
+              <canvas id="chartEndStress"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 6: End Factors -->
+          <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.2rem; background: #fafafa; grid-column: 1 / -1;">
+            <h3 style="font-size: 0.95rem; color: var(--energisa-blue-dark); margin-bottom: 1rem; text-align: center;">6. Fim de Turno — Fatores de Desgaste Enfrentados</h3>
+            <div style="height: 260px; position: relative;">
+              <canvas id="chartEndFactors"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo-box">
+          <img src="https://rondoniaovivo.com/imagensNoticias/energisa-logotipo_xDSmviM.png" 
+               alt="Grupo Energisa" 
+               class="footer-logo-img"
+               onerror="this.onerror=null; this.src='https://www.energisa.com.br/PublishingImages/Header/logo-energisa.png';">
+        </div>
+      </div>
+      <div class="footer-text-info">
+        <p><strong>Grupo Energisa</strong> — Portal de Prontidão Ocupacional e Bem-Estar Mental</p>
+        <p>Segurança e conformidade LGPD (Lei nº 13.709/2018)</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let selectedLevels = { q1: null, q2: null, q3: null, q4: null };
+    let selectedFactors = { start: [], end: [] };
+    
+    let overrideStartCheck = true;
+    let overrideEndCheck = true;
+
+    // Current Session Role: 'user' or 'admin'
+    let currentRole = null;
+
+    function validatePin() {
+      const pinInput = document.getElementById('pin-input').value.trim();
+      const errorMsg = document.getElementById('pin-error-msg');
+
+      if (pinInput === '1111') {
+        // Normal User Mode
+        currentRole = 'user';
+        errorMsg.style.display = 'none';
+        document.getElementById('pin-modal-overlay').style.display = 'none';
+        setupUserRoleUI();
+      } else if (pinInput === '2222') {
+        // Admin Mode
+        currentRole = 'admin';
+        errorMsg.style.display = 'none';
+        document.getElementById('pin-modal-overlay').style.display = 'none';
+        setupAdminRoleUI();
+      } else {
+        errorMsg.style.display = 'block';
+        document.getElementById('pin-input').value = '';
+        document.getElementById('pin-input').focus();
+      }
+    }
+
+    function setupUserRoleUI() {
+      document.getElementById('user-name-display').innerText = 'Modo Operacional';
+      document.getElementById('user-role-subtitle').innerText = 'Check-in Direto de Campo';
+      document.getElementById('user-points-badge').style.display = 'block';
+
+      // Show operational tabs, hide ADM tab
+      document.getElementById('nav-item-checkin').style.display = 'block';
+      document.getElementById('nav-item-rewards').style.display = 'block';
+      document.getElementById('nav-item-admin').style.display = 'none';
+
+      switchView('view-checkin');
+    }
+
+    function setupAdminRoleUI() {
+      document.getElementById('user-name-display').innerText = 'Painel Gestão (ADM)';
+      document.getElementById('user-role-subtitle').innerText = 'Acesso Exclusivo Gestor';
+      document.getElementById('user-points-badge').style.display = 'none';
+
+      // Hide operational tabs, show ONLY ADM tab
+      document.getElementById('nav-item-checkin').style.display = 'none';
+      document.getElementById('nav-item-rewards').style.display = 'none';
+      document.getElementById('nav-item-admin').style.display = 'block';
+
+      switchView('view-admin');
+    }
+
+    function resetPinAccess() {
+      document.getElementById('pin-input').value = '';
+      document.getElementById('pin-error-msg').style.display = 'none';
+      document.getElementById('pin-modal-overlay').style.display = 'flex';
+      document.getElementById('pin-input').focus();
+    }
+
+    // ADM Data Store (Daily, Weekly, Monthly mock data + live updates)
+    let currentAdminFilter = 'daily';
+    let adminCharts = {};
+
+    const adminDataset = {
+      daily: {
+        total: 48,
+        avgDisposition: '78%',
+        alertRate: '12%',
+        startEnergy: [6, 14, 28], // Cansado, Normal, Disposto
+        startExpectation: [30, 13, 5], // Tranquilo, Padrão, Estressante
+        startFactors: [8, 5, 12, 6, 4, 3, 7], // Familiares, Empresa, Sono, Saúde, Financeiro, Equipe, Ansiedade
+        endEnergy: [8, 22, 18], // Exausto, Normal, Disposto
+        endStress: [26, 16, 6], // Tranquilo, Padrão, Estressante
+        endFactors: [11, 4, 6, 5, 14, 9] // Pressão, Equipamentos, Comunicação, Familiares, Desgaste Físico, Estresse Operacional
+      },
+      weekly: {
+        total: 310,
+        avgDisposition: '75%',
+        alertRate: '15%',
+        startEnergy: [45, 95, 170],
+        startExpectation: [180, 98, 32],
+        startFactors: [42, 38, 88, 35, 29, 21, 46],
+        endEnergy: [52, 142, 116],
+        endStress: [165, 110, 35],
+        endFactors: [78, 31, 42, 28, 92, 64]
+      },
+      monthly: {
+        total: 1280,
+        avgDisposition: '74%',
+        alertRate: '16%',
+        startEnergy: [195, 410, 675],
+        startExpectation: [720, 420, 140],
+        startFactors: [180, 160, 360, 145, 120, 95, 210],
+        endEnergy: [220, 580, 480],
+        endStress: [680, 450, 150],
+        endFactors: [310, 125, 175, 115, 390, 270]
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', function() {
+      checkShiftTimeRestrictions();
+      initAdminCharts();
+      document.getElementById('pin-input').focus();
+    });
+
+    function switchView(viewId) {
+      document.querySelectorAll('.view-panel').forEach(panel => {
+        panel.classList.remove('active');
+      });
+      
+      const targetView = document.getElementById(viewId);
+      if(targetView) {
+        targetView.classList.add('active');
+      }
+
+      document.querySelectorAll('#main-nav button').forEach(btn => {
+        btn.classList.remove('active');
+        if(btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(viewId)) {
+          btn.classList.add('active');
+        }
+      });
+
+      if(viewId === 'view-admin') {
+        renderAdminDashboard();
+      }
+    }
+
+    /* Admin Dashboard Logic */
+    function changeAdminFilter(filter) {
+      currentAdminFilter = filter;
+      document.getElementById('filter-daily').classList.remove('active');
+      document.getElementById('filter-weekly').classList.remove('active');
+      document.getElementById('filter-monthly').classList.remove('active');
+      document.getElementById(`filter-${filter}`).classList.add('active');
+      
+      renderAdminDashboard();
+    }
+
+    function renderAdminDashboard() {
+      const data = adminDataset[currentAdminFilter];
+
+      document.getElementById('kpi-total-responses').innerText = data.total;
+      document.getElementById('kpi-avg-disposition').innerText = data.avgDisposition;
+      document.getElementById('kpi-alert-rate').innerText = data.alertRate;
+
+      if(adminCharts.startEnergy) {
+        adminCharts.startEnergy.data.datasets[0].data = data.startEnergy;
+        adminCharts.startEnergy.update();
+      }
+      if(adminCharts.startExpectation) {
+        adminCharts.startExpectation.data.datasets[0].data = data.startExpectation;
+        adminCharts.startExpectation.update();
+      }
+      if(adminCharts.startFactors) {
+        adminCharts.startFactors.data.datasets[0].data = data.startFactors;
+        adminCharts.startFactors.update();
+      }
+      if(adminCharts.endEnergy) {
+        adminCharts.endEnergy.data.datasets[0].data = data.endEnergy;
+        adminCharts.endEnergy.update();
+      }
+      if(adminCharts.endStress) {
+        adminCharts.endStress.data.datasets[0].data = data.endStress;
+        adminCharts.endStress.update();
+      }
+      if(adminCharts.endFactors) {
+        adminCharts.endFactors.data.datasets[0].data = data.endFactors;
+        adminCharts.endFactors.update();
+      }
+    }
+
+    function initAdminCharts() {
+      const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        }
+      };
+
+      // 1. Start Energy
+      const ctx1 = document.getElementById('chartStartEnergy');
+      if (ctx1) {
+        adminCharts.startEnergy = new Chart(ctx1, {
+          type: 'doughnut',
+          data: {
+            labels: ['Cansado', 'Normal', 'Disposto'],
+            datasets: [{
+              data: adminDataset.daily.startEnergy,
+              backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      // 2. Start Expectation
+      const ctx2 = document.getElementById('chartStartExpectation');
+      if (ctx2) {
+        adminCharts.startExpectation = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: ['Tranquilo', 'Padrão', 'Estressante'],
+            datasets: [{
+              data: adminDataset.daily.startExpectation,
+              backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      // 3. Start Factors
+      const ctx3 = document.getElementById('chartStartFactors');
+      if (ctx3) {
+        adminCharts.startFactors = new Chart(ctx3, {
+          type: 'bar',
+          data: {
+            labels: ['Problemas Familiares', 'Questões Empresa', 'Má Qualidade Sono', 'Saúde Física', 'Financeiro', 'Clima Equipe', 'Ansiedade/Estresse'],
+            datasets: [{
+              data: adminDataset.daily.startFactors,
+              backgroundColor: '#f37021',
+              borderRadius: 6
+            }]
+          },
+          options: chartOptions
+        });
+      }
+
+      // 4. End Energy
+      const ctx4 = document.getElementById('chartEndEnergy');
+      if (ctx4) {
+        adminCharts.endEnergy = new Chart(ctx4, {
+          type: 'doughnut',
+          data: {
+            labels: ['Exausto', 'Normal', 'Disposto'],
+            datasets: [{
+              data: adminDataset.daily.endEnergy,
+              backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      // 5. End Stress
+      const ctx5 = document.getElementById('chartEndStress');
+      if (ctx5) {
+        adminCharts.endStress = new Chart(ctx5, {
+          type: 'doughnut',
+          data: {
+            labels: ['Tranquilo', 'Padrão', 'Estressante'],
+            datasets: [{
+              data: adminDataset.daily.endStress,
+              backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+
+      // 6. End Factors
+      const ctx6 = document.getElementById('chartEndFactors');
+      if (ctx6) {
+        adminCharts.endFactors = new Chart(ctx6, {
+          type: 'bar',
+          data: {
+            labels: ['Pressão/Sobrecarga', 'Condições Ferramentas', 'Comunicação', 'Problemas Pessoais', 'Exaustão Física/Calor', 'Estresse Operacional'],
+            datasets: [{
+              data: adminDataset.daily.endFactors,
+              backgroundColor: '#00a4d3',
+              borderRadius: 6
+            }]
+          },
+          options: chartOptions
+        });
+      }
+    }
+
+    function switchShiftTab(tab) {
+      document.getElementById('tab-start').classList.remove('active');
+      document.getElementById('tab-end').classList.remove('active');
+
+      if(tab === 'start') {
+        document.getElementById('tab-start').classList.add('active');
+        document.getElementById('shift-start-section').style.display = 'block';
+        document.getElementById('shift-end-section').style.display = 'none';
+      } else {
+        document.getElementById('tab-end').classList.add('active');
+        document.getElementById('shift-start-section').style.display = 'none';
+        document.getElementById('shift-end-section').style.display = 'block';
+      }
+      checkShiftTimeRestrictions();
+    }
+
+    function checkShiftTimeRestrictions() {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinutes = now.getMinutes();
+      const timeString = `${String(currentHour).padStart(2,'0')}:${String(currentMinutes).padStart(2,'0')}`;
+      
+      document.getElementById('current-start-sim-time').innerText = timeString;
+      document.getElementById('current-sim-time').innerText = timeString;
+
+      const isStartAllowed = overrideStartCheck || (currentHour >= 5 && currentHour < 12);
+      if(!isStartAllowed) {
+        document.getElementById('start-time-lock-alert').style.display = 'block';
+        document.getElementById('checkin-form-wrapper').style.display = 'none';
+      } else {
+        document.getElementById('start-time-lock-alert').style.display = 'none';
+        document.getElementById('checkin-form-wrapper').style.display = 'block';
+      }
+
+      const isEndAllowed = overrideEndCheck || (currentHour >= 12 && currentHour < 23);
+      if(!isEndAllowed) {
+        document.getElementById('time-lock-alert').style.display = 'block';
+        document.getElementById('shift-end-form-content').style.display = 'none';
+      } else {
+        document.getElementById('time-lock-alert').style.display = 'none';
+        document.getElementById('shift-end-form-content').style.display = 'block';
+      }
+    }
+
+    function toggleStartShiftOverride() {
+      overrideStartCheck = !overrideStartCheck;
+      checkShiftTimeRestrictions();
+    }
+
+    function toggleTimeOverride() {
+      overrideEndCheck = !overrideEndCheck;
+      checkShiftTimeRestrictions();
+    }
+
+    function handleSingleBatterySelect(questionId, levelType, labelText, buttonElement) {
+      const fillElement = document.getElementById(`battery-fill-${questionId}`);
+      const parentRow = buttonElement.closest('.battery-options-row');
+      
+      parentRow.querySelectorAll('.btn-battery-option').forEach(btn => btn.classList.remove('selected'));
+      buttonElement.classList.add('selected');
+
+      let percentage = 50;
+      if(levelType === 'low') percentage = 15;
+      if(levelType === 'mid') percentage = 50;
+      if(levelType === 'high') percentage = 100;
+
+      fillElement.style.height = percentage + '%';
+      fillElement.innerText = labelText;
+
+      if(percentage <= 20) {
+        fillElement.style.backgroundColor = 'var(--battery-red)';
+      } else if(percentage <= 60) {
+        fillElement.style.backgroundColor = 'var(--battery-yellow)';
+      } else {
+        fillElement.style.backgroundColor = 'var(--battery-green)';
+      }
+
+      selectedLevels[questionId] = levelType;
+    }
+
+    /* Toggle Battery Model Factor Buttons */
+    function toggleFactorBattery(element, shiftType, factorKey) {
+      element.classList.toggle('selected');
+      const index = selectedFactors[shiftType].indexOf(factorKey);
+      if (index > -1) {
+        selectedFactors[shiftType].splice(index, 1);
+      } else {
+        selectedFactors[shiftType].push(factorKey);
+      }
+    }
+
+    function generateHealthAutoEvalText(type) {
+      let evaluationText = "";
+      const factors = selectedFactors[type];
+      const energyLevel = type === 'start' ? selectedLevels.q1 : selectedLevels.q3;
+      const stressExpectation = type === 'start' ? selectedLevels.q2 : selectedLevels.q4;
+
+      // Physical & Mental Health Assessment Logic
+      if (energyLevel === 'low') {
+        evaluationText += "<strong>Autoavaliação Física e Vitalidade:</strong> Seu nível de energia está reduzido. Cansaço físico reduz o foco e os reflexos operacionais. Lembre-se de realizar pausas de hidratação e verificar suas condições físicas antes de iniciar tarefas em altura ou alta tensão.<br><br>";
+      } else {
+        evaluationText += "<strong>Autoavaliação Física e Vitalidade:</strong> Você apresenta boa prontidão física. Mantenha a postura ergonomicamente correta e a hidratação constante ao longo do turno.<br><br>";
+      }
+
+      if (stressExpectation === 'low') {
+        evaluationText += "<strong>Autoavaliação Emocional e Tensão:</strong> Atividades sob alto estresse exigem regulação emocional consciente. Pratique respirações profundas em momentos de alta pressão e não hesite em alinhar a sequência do trabalho com sua equipe.<br><br>";
+      }
+
+      // Dynamic Factor Specific Guidance
+      if (factors.includes('familiares')) {
+        evaluationText += "• <strong>Preocupações Pessoais/Familiares:</strong> Problemas fora do trabalho consomem energia mental significativa. Reconhecer isso ajuda a evitar a dispersão no campo. Converse com a liderança ou utilize os canais sigilosos de apoio psicológico.<br>";
+      }
+      if (factors.includes('empresa') || factors.includes('pressao_trabalho') || factors.includes('comunicacao')) {
+        evaluationText += "• <strong>Pressão do Trabalho / Comunicação:</strong> Questões organizacionais e de metas não devem comprometer a segurança. O diálogo aberto com seus colegas e gestores é a chave para alinhar prioridades com calma.<br>";
+      }
+      if (factors.includes('sono')) {
+        evaluationText += "• <strong>Qualidade do Sono:</strong> Noites mal dormidas afetam a saúde física e a clareza cognitiva. Avalie sua rotina noturna e procure desacelerar telas antes de dormir.<br>";
+      }
+      if (factors.includes('saude') || factors.includes('desgaste_fisico')) {
+        evaluationText += "• <strong>Desgaste e Saúde Física:</strong> Respeite os sinais do seu corpo (dores, calor extremo ou exaustão). Cuidar de si é o primeiro passo para garantir a integridade de todos.<br>";
+      }
+      if (factors.includes('ansiedade')) {
+        evaluationText += "• <strong>Ansiedade / Estresse Emocional:</strong> A ansiedade afeta diretamente sua tomada de decisão. Lembre-se de que a Energisa possui suporte estruturado para acolher você em qualquer momento.<br>";
+      }
+
+      if (factors.length === 0 && energyLevel !== 'low') {
+        evaluationText += "• <strong>Equilíbrio Global:</strong> Seu estado geral indica um bom equilíbrio entre saúde física e emocional hoje. Mantenha essa atenção plena durante todo o dia!";
+      }
+
+      return evaluationText;
+    }
+
+    function submitCheckin(type) {
+      if(type === 'start') {
+        if(!selectedLevels.q1 || !selectedLevels.q2) {
+          alert("Por favor, selecione as respostas das perguntas 1 e 2.");
+          return;
+        }
+
+        // Live update ADM datasets upon submission
+        adminDataset.daily.total += 1;
+        if(selectedLevels.q1 === 'low') adminDataset.daily.startEnergy[0]++;
+        if(selectedLevels.q1 === 'mid') adminDataset.daily.startEnergy[1]++;
+        if(selectedLevels.q1 === 'high') adminDataset.daily.startEnergy[2]++;
+
+        const evalText = generateHealthAutoEvalText('start');
+        document.getElementById('auto-eval-start-text').innerHTML = evalText;
+
+        document.getElementById('checkin-form-wrapper').style.display = 'none';
+        document.getElementById('checkin-success-wrapper').style.display = 'block';
+
+      } else if (type === 'end') {
+        if(!selectedLevels.q3 || !selectedLevels.q4) {
+          alert("Por favor, selecione as respostas das perguntas 1 e 2.");
+          return;
+        }
+
+        // Live update ADM datasets upon submission
+        adminDataset.daily.total += 1;
+        if(selectedLevels.q3 === 'low') adminDataset.daily.endEnergy[0]++;
+        if(selectedLevels.q3 === 'mid') adminDataset.daily.endEnergy[1]++;
+        if(selectedLevels.q3 === 'high') adminDataset.daily.endEnergy[2]++;
+
+        const evalText = generateHealthAutoEvalText('end');
+        document.getElementById('auto-eval-end-text').innerHTML = evalText;
+
+        document.getElementById('shift-end-form-content').style.display = 'none';
+        document.getElementById('end-success-wrapper').style.display = 'block';
+      }
+    }
+
+    function claimReward(cost, rewardTitle) {
+      alert(`Recompensa "${rewardTitle}" (${cost} Pontos) resgatada com sucesso!`);
+    }
+  </script>
+</body>
+</html>
